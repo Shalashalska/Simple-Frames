@@ -1,0 +1,20 @@
+[
+{
+  "modid": "metallum",
+  "name": "Melior Metallum",
+  "description": "Did you ever want some metals with more flavor? Well now you can!",
+  "version": "0.0.1",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [
+    "Shalashalska"
+  ],
+  "credits":
+  "logoFile",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
