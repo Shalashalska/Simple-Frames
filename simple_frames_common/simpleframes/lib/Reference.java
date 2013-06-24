@@ -8,4 +8,5 @@ public class Reference {
     public static final String CLIENT_PROXY_CLASS = "simpleframes.core.proxy.ClientProxy";
     public static final String SERVER_PROXY_CLASS = "simpleframes.core.proxy.CommonProxy";
     public static final int SHIFTED_RANGE_ID_CORRECTION = 256;
+    public static final int CEILING = 254;
 }

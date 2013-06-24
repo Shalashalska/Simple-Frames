@@ -9,6 +9,6 @@ public class ItemSimpleFrames extends Item {
     public ItemSimpleFrames(int id, String itemName) {
         super(id - Reference.SHIFTED_RANGE_ID_CORRECTION);
         this.setUnlocalizedName(itemName);
-        this.setCreativeTab(SimpleFrames.tabsMetallum);
+        this.setCreativeTab(SimpleFrames.tabsSimpleFrames);
     }
 }
