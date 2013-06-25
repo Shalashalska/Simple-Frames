@@ -6,6 +6,7 @@ import simpleframes.configuration.ConfigurationHandler;
 import simpleframes.core.proxy.CommonProxy;
 import simpleframes.creativetab.CreativeTabSimpleFrames;
 import simpleframes.item.ModItems;
+import simpleframes.item.crafting.SimpleFramesCrafting;
 import simpleframes.lib.Reference;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -35,10 +36,11 @@ public class SimpleFrames {
     public void init(FMLInitializationEvent event) {
         ModItems.init();
         ModBlocks.init();
+        SimpleFramesCrafting.init();
     }
 
     @PostInit
     public void postInit(FMLPostInitializationEvent event) {
-
+        
     }
 }
