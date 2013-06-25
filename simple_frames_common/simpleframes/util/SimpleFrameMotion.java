@@ -16,7 +16,6 @@ public class SimpleFrameMotion {
     private int addX;
     private int addY;
     private int addZ;
-    private NBTTagCompound tileEntityNBT;
 
     private static class BlockData {
         int x;
@@ -25,7 +24,8 @@ public class SimpleFrameMotion {
         int id;
         int meta;
         TileEntity tileEntity;
-        NBTTagCompound tileEntityNBT = new NBTTagCompound();
+        NBTTagCompound tileEntityNBT;
+        boolean hadTileEntity;
 
         BlockData(int x, int y, int z) {
             this.x = x;
@@ -37,10 +37,6 @@ public class SimpleFrameMotion {
             this.id = id;
             this.meta = meta;
             this.tileEntity = tileEntity;
-        }
-
-        void addTileEntityNBT(NBTTagCompound tileEntityNBT) {
-            this.tileEntityNBT = tileEntityNBT;
         }
 
         public BlockData[] neighbors() {
@@ -98,23 +94,28 @@ public class SimpleFrameMotion {
     }
 
     private void simpleFrameMove(BlockData p) {
+        //Gets data about the blocks and turns them to air
         for (BlockData movingBlock : movingBlocks) {
             movingBlock.addMetadata(world.getBlockId(movingBlock.x, movingBlock.y, movingBlock.z),
                     world.getBlockMetadata(movingBlock.x, movingBlock.y, movingBlock.z),
                     world.getBlockTileEntity(movingBlock.x, movingBlock.y, movingBlock.z));
             if (movingBlock.tileEntity != null) {
-                movingBlock.tileEntity.writeToNBT(tileEntityNBT);
-                movingBlock.addTileEntityNBT(tileEntityNBT);
+                movingBlock.tileEntityNBT = new NBTTagCompound();
+                movingBlock.tileEntity.writeToNBT(movingBlock.tileEntityNBT);
+                movingBlock.tileEntity.invalidate();
+                movingBlock.hadTileEntity = true;
             }
             world.setBlockToAir(movingBlock.x, movingBlock.y, movingBlock.z);
         }
+        //Puts the blocks back in the new positions
         for (BlockData movingBlock : movingBlocks) {
             world.setBlock(movingBlock.x + addX, movingBlock.y + addY, movingBlock.z + addZ, movingBlock.id, movingBlock.meta, 3);
-            if (movingBlock.tileEntity != null) {
-                tileEntityNBT.setInteger("x", movingBlock.x + addX);
-                tileEntityNBT.setInteger("y", movingBlock.y + addY);
-                tileEntityNBT.setInteger("z", movingBlock.z + addZ);
-                TileEntity.createAndLoadEntity(movingBlock.tileEntityNBT);
+            if (movingBlock.hadTileEntity == true) {
+                movingBlock.tileEntity.yCoord = -1;
+                movingBlock.tileEntityNBT.setInteger("x", movingBlock.x + addX);
+                movingBlock.tileEntityNBT.setInteger("y", movingBlock.y + addY);
+                movingBlock.tileEntityNBT.setInteger("z", movingBlock.z + addZ);
+                world.getBlockTileEntity(movingBlock.x + addX, movingBlock.y + addY, movingBlock.z + addZ).readFromNBT(movingBlock.tileEntityNBT);
             }
         }
     }
