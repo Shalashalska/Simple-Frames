@@ -86,7 +86,7 @@ public class SimpleFrameMotion {
     public static void simpleFrameMoveMain(World world, int x, int y, int z, int addX, int addY, int addZ) {
         SimpleFrameMotion simpleFrameMotion = new SimpleFrameMotion(world, addX, addY, addZ);
         BlockData startingPoint = new BlockData(x, y, z);
-        simpleFrameMotion.findBlocksToMove(startingPoint);
+        simpleFrameMotion.findBlocksToMoveFirst(startingPoint);
         if (simpleFrameMotion.getCanMoveMain()) {
             simpleFrameMotion.simpleFrameMove(startingPoint);
             simpleFrameMotion.movingBlocks.clear();
@@ -141,6 +141,19 @@ public class SimpleFrameMotion {
         movingBlocks.add(p);
         if (world.getBlockId(p.x, p.y, p.z) == BlockIds.SIMPLE_FRAMES_META_BLOCK_ID &&
             world.getBlockMetadata(p.x, p.y, p.z) == BlockMeta.FRAME_META_ID) {
+            for (BlockData neighbor : p.neighbors()) {
+                if (!movingBlocks.contains(neighbor)) {
+                    findBlocksToMove(neighbor);
+                }
+            }
+        }
+    }
+    private void findBlocksToMoveFirst(BlockData p) {
+        if (world.isAirBlock(p.x, p.y, p.z)) {
+            return;
+        }
+        movingBlocks.add(p);
+        if (world.getBlockId(p.x, p.y, p.z) == BlockIds.SIMPLE_FRAMES_META_BLOCK_ID) {
             for (BlockData neighbor : p.neighbors()) {
                 if (!movingBlocks.contains(neighbor)) {
                     findBlocksToMove(neighbor);
