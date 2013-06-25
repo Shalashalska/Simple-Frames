@@ -3,6 +3,7 @@ package simpleframes.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import simpleframes.lib.BlockIds;
@@ -15,6 +16,7 @@ public class SimpleFrameMotion {
     private int addX;
     private int addY;
     private int addZ;
+    private NBTTagCompound tileEntityNBT;
 
     private static class BlockData {
         int x;
@@ -23,6 +25,7 @@ public class SimpleFrameMotion {
         int id;
         int meta;
         TileEntity tileEntity;
+        NBTTagCompound tileEntityNBT = new NBTTagCompound();
 
         BlockData(int x, int y, int z) {
             this.x = x;
@@ -34,6 +37,10 @@ public class SimpleFrameMotion {
             this.id = id;
             this.meta = meta;
             this.tileEntity = tileEntity;
+        }
+
+        void addTileEntityNBT(NBTTagCompound tileEntityNBT) {
+            this.tileEntityNBT = tileEntityNBT;
         }
 
         public BlockData[] neighbors() {
@@ -95,24 +102,21 @@ public class SimpleFrameMotion {
             movingBlock.addMetadata(world.getBlockId(movingBlock.x, movingBlock.y, movingBlock.z),
                     world.getBlockMetadata(movingBlock.x, movingBlock.y, movingBlock.z),
                     world.getBlockTileEntity(movingBlock.x, movingBlock.y, movingBlock.z));
-//            if (movingBlock.tileEntity == null) {
-                world.setBlockToAir(movingBlock.x, movingBlock.y, movingBlock.z);
-//            }
+            if (movingBlock.tileEntity != null) {
+                movingBlock.tileEntity.writeToNBT(tileEntityNBT);
+                movingBlock.addTileEntityNBT(tileEntityNBT);
+            }
+            world.setBlockToAir(movingBlock.x, movingBlock.y, movingBlock.z);
         }
         for (BlockData movingBlock : movingBlocks) {
-//            if (movingBlock.tileEntity != null) {
-                world.setBlock(movingBlock.x + addX, movingBlock.y + addY, movingBlock.z + addZ, movingBlock.id,
-                        movingBlock.meta, 2);
-//                world.setBlockTileEntity(movingBlock.x + addX, movingBlock.y + addY, movingBlock.z + addZ, movingBlock.tileEntity);
-                world.setBlockToAir(movingBlock.x, movingBlock.y, movingBlock.z);
-//            }
+            world.setBlock(movingBlock.x + addX, movingBlock.y + addY, movingBlock.z + addZ, movingBlock.id, movingBlock.meta, 3);
+            if (movingBlock.tileEntity != null) {
+                tileEntityNBT.setInteger("x", movingBlock.x + addX);
+                tileEntityNBT.setInteger("y", movingBlock.y + addY);
+                tileEntityNBT.setInteger("z", movingBlock.z + addZ);
+                TileEntity.createAndLoadEntity(movingBlock.tileEntityNBT);
+            }
         }
-//        for (BlockData movingBlock : movingBlocks) {
-//            if (movingBlock.tileEntity == null) {
-//                world.setBlock(movingBlock.x + addX, movingBlock.y + addY, movingBlock.z + addZ, movingBlock.id,
-//                        movingBlock.meta, 2);
-//            }
-//        }
     }
 
     private boolean getCanMoveMain() {
