@@ -9,9 +9,7 @@ import simpleframes.item.ModItems;
 import simpleframes.item.crafting.SimpleFramesCrafting;
 import simpleframes.lib.Reference;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -25,21 +23,21 @@ public class SimpleFrames {
 
     public static CreativeTabs tabsSimpleFrames = new CreativeTabSimpleFrames(CreativeTabs.getNextID(), Reference.MOD_NAME);
 
-    @PreInit
+    @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         ConfigurationHandler.config(event);
         ModItems.preInit();
         ModBlocks.preInit();
     }
 
-    @Init
+    @EventHandler
     public void init(FMLInitializationEvent event) {
         ModItems.init();
         ModBlocks.init();
         SimpleFramesCrafting.init();
     }
 
-    @PostInit
+    @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         
     }
