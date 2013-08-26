@@ -25,22 +25,22 @@ public class BlockFrame extends BlockSimpleFrames {
             float par8, float par9) {
         int meta = world.getBlockMetadata(x, y, z);
         switch (meta) {
-            case 0: //good > bad
-                world.setBlockMetadataWithNotify(x, y, z, 2, 3); 
+            case 0:
+                world.setBlockMetadataWithNotify(x, y, z, 2, 3);
                 break;
-            case 2: //bad > good
-                world.setBlockMetadataWithNotify(x, y, z, 3, 3); 
+            case 2:
+                world.setBlockMetadataWithNotify(x, y, z, 3, 3);
                 break;
-            case 3: //good > bad
+            case 3:
                 world.setBlockMetadataWithNotify(x, y, z, 4, 3);
                 break;
-            case 4: //bad > good
+            case 4:
                 world.setBlockMetadataWithNotify(x, y, z, 5, 3);
                 break;
-            case 5: //good > bad
+            case 5:
                 world.setBlockMetadataWithNotify(x, y, z, 6, 3);
                 break;
-            case 6: //bad > good
+            case 6:
                 world.setBlockMetadataWithNotify(x, y, z, 0, 3);
                 break;
         }
@@ -162,5 +162,13 @@ public class BlockFrame extends BlockSimpleFrames {
         for (int i = 0; i < 2; i++) {
             itemList.add(new ItemStack(id, 1, i));
         }
+    }
+
+    @Override
+    public int damageDropped(int metadata) {
+        if (metadata == 1) {
+            return 1;
+        }
+        return 0;
     }
 }
